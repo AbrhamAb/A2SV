@@ -1,0 +1,32 @@
+class Solution:
+    def diffWaysToCompute(self, expression: str) -> List[int]:
+        memo = {}
+
+        def solve(exp):
+            if exp in memo:
+                return memo[exp]
+
+            if exp.isdigit():
+                return [int(exp)]
+
+            res = []
+
+            for i in range(len(exp)):
+                if exp[i] in "+-*":
+                    left = solve(exp[:i])
+                    right = solve(exp[i+1:])
+
+                    for a in left:
+                        for b in right:
+                            if exp[i] == '+':
+                                res.append(a + b)
+                            elif exp[i] == '-':
+                                res.append(a - b)
+                            else:
+                                res.append(a * b)
+
+            memo[exp] = res
+            return res
+
+        return solve(expression)
+        
